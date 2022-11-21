@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/static/css/main.3f16c467.chunk.css",
-    "main.js": "/static/js/main.d5adc6ca.chunk.js",
-    "main.js.map": "/static/js/main.d5adc6ca.chunk.js.map",
+    "main.css": "/static/css/main.308e743f.chunk.css",
+    "main.js": "/static/js/main.582b6537.chunk.js",
+    "main.js.map": "/static/js/main.582b6537.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.b406d279.js",
     "runtime-main.js.map": "/static/js/runtime-main.b406d279.js.map",
     "static/js/2.0832cd3d.chunk.js": "/static/js/2.0832cd3d.chunk.js",
     "static/js/2.0832cd3d.chunk.js.map": "/static/js/2.0832cd3d.chunk.js.map",
     "index.html": "/index.html",
-    "static/css/main.3f16c467.chunk.css.map": "/static/css/main.3f16c467.chunk.css.map",
+    "static/css/main.308e743f.chunk.css.map": "/static/css/main.308e743f.chunk.css.map",
     "static/js/2.0832cd3d.chunk.js.LICENSE.txt": "/static/js/2.0832cd3d.chunk.js.LICENSE.txt",
     "static/media/Discord.04097318.svg": "/static/media/Discord.04097318.svg",
     "static/media/Instagram.658cb6a0.svg": "/static/media/Instagram.658cb6a0.svg",
@@ -35,7 +35,7 @@
   "entrypoints": [
     "static/js/runtime-main.b406d279.js",
     "static/js/2.0832cd3d.chunk.js",
-    "static/css/main.3f16c467.chunk.css",
-    "static/js/main.d5adc6ca.chunk.js"
+    "static/css/main.308e743f.chunk.css",
+    "static/js/main.582b6537.chunk.js"
   ]
 }
