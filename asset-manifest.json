@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/static/css/main.2fda9654.chunk.css",
-    "main.js": "/static/js/main.2eb1718f.chunk.js",
-    "main.js.map": "/static/js/main.2eb1718f.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.b406d279.js",
-    "runtime-main.js.map": "/static/js/runtime-main.b406d279.js.map",
-    "static/js/2.d16c9306.chunk.js": "/static/js/2.d16c9306.chunk.js",
-    "static/js/2.d16c9306.chunk.js.map": "/static/js/2.d16c9306.chunk.js.map",
+    "main.css": "/static/css/main.dfe4968c.chunk.css",
+    "main.js": "/static/js/main.82224a49.chunk.js",
+    "main.js.map": "/static/js/main.82224a49.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.eddcd8c4.js",
+    "runtime-main.js.map": "/static/js/runtime-main.eddcd8c4.js.map",
+    "static/js/2.19d2cce7.chunk.js": "/static/js/2.19d2cce7.chunk.js",
+    "static/js/2.19d2cce7.chunk.js.map": "/static/js/2.19d2cce7.chunk.js.map",
     "index.html": "/index.html",
-    "static/css/main.2fda9654.chunk.css.map": "/static/css/main.2fda9654.chunk.css.map",
-    "static/js/2.d16c9306.chunk.js.LICENSE.txt": "/static/js/2.d16c9306.chunk.js.LICENSE.txt",
+    "static/css/main.dfe4968c.chunk.css.map": "/static/css/main.dfe4968c.chunk.css.map",
+    "static/js/2.19d2cce7.chunk.js.LICENSE.txt": "/static/js/2.19d2cce7.chunk.js.LICENSE.txt",
     "static/media/Discord.04097318.svg": "/static/media/Discord.04097318.svg",
     "static/media/Instagram.658cb6a0.svg": "/static/media/Instagram.658cb6a0.svg",
     "static/media/Minus.ddbdf9a9.svg": "/static/media/Minus.ddbdf9a9.svg",
@@ -25,16 +25,16 @@
     "static/media/about2.8d89dda6.png": "/static/media/about2.8d89dda6.png",
     "static/media/about3.30dae096.png": "/static/media/about3.30dae096.png",
     "static/media/about4.2e0db6e6.png": "/static/media/about4.2e0db6e6.png",
-    "static/media/allLocationsUSfirst.a3b6f0a8.csv": "/static/media/allLocationsUSfirst.a3b6f0a8.csv",
+    "static/media/allLocationsUSfirst.f9ab868d.csv": "/static/media/allLocationsUSfirst.f9ab868d.csv",
     "static/media/background1.4b2a06e2.png": "/static/media/background1.4b2a06e2.png",
     "static/media/logo.d4712fc8.png": "/static/media/logo.d4712fc8.png",
     "static/media/team1.18edc34a.png": "/static/media/team1.18edc34a.png",
     "static/media/team2.ad79fc76.png": "/static/media/team2.ad79fc76.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.b406d279.js",
-    "static/js/2.d16c9306.chunk.js",
-    "static/css/main.2fda9654.chunk.css",
-    "static/js/main.2eb1718f.chunk.js"
+    "static/js/runtime-main.eddcd8c4.js",
+    "static/js/2.19d2cce7.chunk.js",
+    "static/css/main.dfe4968c.chunk.css",
+    "static/js/main.82224a49.chunk.js"
   ]
 }
