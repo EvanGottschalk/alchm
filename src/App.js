@@ -12,7 +12,7 @@ import NFZFILPage from './pages/nfzfil/NFZFIL'
 
 const App = () => {
      return (
-          <BrowserRouter basename={process.env.PUBLIC_URL}>
+          <BrowserRouter >
           <Background />
           <Navbar />
           <Routes>
