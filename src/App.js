@@ -5,26 +5,25 @@ import Footer from './components/footer/Footer'
 
 //E~ Added for background implementation
 import Background from './components/background/Background'
-//import { Switch, BrowserRouter, Route, Routes } from 'react-router-dom';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Switch, BrowserRouter, Route, Routes } from 'react-router-dom';
 import AvatarPage from './pages/avatar/AvatarPage';
 import MintPage from './pages/mint/MintPage';
 import NFZFILPage from './pages/nfzfil/NFZFIL'
 
 const App = () => {
      return (
-          <Router basename="/">
+          <BrowserRouter basename='/'>
           <Background />
           <Navbar />
           <Routes>
-               <Route exact path="/" element={Main} />
-               <Route path="/mint" element={MintPage} />
-               <Route path="/avatar" element={AvatarPage} />
-               <Route path="/test" element={MintPage} />
-               <Route path="/nfzfil" element={NFZFILPage} />
+               <Route exact path="/" element={<Main />} />
+               <Route exact path="/mint" element={<MintPage />} />
+               <Route exact path="/avatar" element={<AvatarPage />} />
+               <Route exact path="/test" element={<MintPage />} />
+               <Route exact path="/nfzfil" element={<NFZFILPage />} />
           </Routes>
           <Footer />
-          </Router>
+          </BrowserRouter>
      )
 }
 
