@@ -13,7 +13,7 @@ import NFZFILPage from './pages/nfzfil/NFZFIL'
 
 const App = () => {
      return (
-          <Router basename="/alchm.xyz">
+          <Router basename="/">
           <Background />
           <Navbar />
           <Routes>
