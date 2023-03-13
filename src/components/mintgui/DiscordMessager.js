@@ -3,7 +3,12 @@ export default { sendMessage }
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
+const default_handle = 'EvanOnEarth#2153';
+
 function sendMessage(userHandle, message) {
+  if (userHandle === 'default') {
+    userHandle = default_handle;
+  };
     client.on('ready', () => {
       const user = client.users.cache.find(user => user.tag === userHandle);
       if (user) {

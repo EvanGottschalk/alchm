@@ -11,6 +11,7 @@ import { Origin, Horoscope } from "../../../node_modules/circular-natal-horoscop
 import pinToIPFS from "./pin-to-ipfs.js";
 import createAlchmMetadata from "./create-alchm-metadata";
 import alchemizer from "./alchemizer";
+//import midjournizer from './midjournizer'
 
 import locationCSV from "./allLocationsUSfirst.csv";
 
@@ -50,6 +51,8 @@ const openSeaLinkDelay = 8;
 
 let address, signer, provider;
 var mintButtonActive = false;
+
+var avatar_URL = '#';
 
 //E~ Update these variables manually according to the smart contract address of your NFT collection,
 //   and the URI of the metadata to be minted as an NFT
@@ -566,6 +569,7 @@ function handleSubmitClick (event) {
   const alchemy = alchemizer.alchemize(astrologize(name));
   console.log("Alchm Output: ", alchemy);
   document.getElementById("alchmInfo").innerHTML = convertDictToString(alchemy);
+  //avatar_URL = midjournizer.midjournize(alchemy);
 }
 
 function activateMintButton() {

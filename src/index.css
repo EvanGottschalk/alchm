@@ -27,6 +27,9 @@
   --color-navbarBoxSubtitle: #f2ff61;
 }
 
+/* .buttonStyle1, .buttonStyle2, etc.
+   Then add these classes to buttons to automatically give them the default style */
+
 @font-face {
   font-family: 'Sequel100Black-65';
   src: local('Sequel100Black-65'), url(./fonts/Sequel100Black-65.ttf) format('opentype');
