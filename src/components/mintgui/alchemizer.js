@@ -458,6 +458,7 @@ function alchemize(horoscope) {
                      'Heat': 0,
                      'Entropy': 0,
                      'Reactivity': 0,
+                     'Energy': 0,
                      '# Cardinal': 0,
                      '# Fixed': 0,
                      '# Mutable': 0,
@@ -898,7 +899,7 @@ function alchemize(horoscope) {
     alchmInfo['Entropy'] = (spirit**2 + substance**2 + fire**2 + air**2) / (essence + matter + earth + water)**2;
     alchmInfo['Reactivity'] = (spirit**2 + substance**2 + essence**2 + fire**2 + air**2 + water**2) / (matter + earth)**2;
 
-    console.log('Heat: ', alchmInfo['Heat']);
+    alchmInfo['Energy'] = alchmInfo['Heat'] - (alchmInfo['Reactivity'] * alchmInfo['Entropy']);
 
     return(alchmInfo);
 }
