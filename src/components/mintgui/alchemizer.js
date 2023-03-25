@@ -53,8 +53,8 @@ var planetInfo = {'Sun': {'Dignity Effect': {'Leo': 1,
                                             'Essence': 0,
                                             'Matter': 0,
                                             'Substance': 1},
-                                'Diurnal Base Element': 'Earth',
-                                'Nocturnal Base Element': 'Air'},
+                                'Diurnal Base Element': 'Air',
+                                'Nocturnal Base Element': 'Earth'},
                     'Venus': {'Dignity Effect': {'Libra': 1, 
                                                  'Taurus': 1,
                                                  'Pisces': 2, 
@@ -441,7 +441,12 @@ function alchemize(horoscope) {
                                       'Ascendant': ""}, 
                      'Minor Arcana': {'Decan': "",
                                       'Cusp': "None"},
-                     'Alchemy Effects': {},
+                     'Alchemy Effects': {'Total Spirit': 0,
+                                         'Total Essence': 0,
+                                         'Total Day Essence': 0,
+                                         'Total Matter': 0,
+                                         'Total Substance': 0,
+                                         'Total Night Essence': 0},
                      'Chart Ruler': '',
                      'Total Dignity Effect': createElementObject(),
                      'Total Decan Effect': createElementObject(),
@@ -459,7 +464,7 @@ function alchemize(horoscope) {
                      '% Cardinal': 0,
                      '% Fixed': 0,
                      '% Mutable': 0,
-                     'All Conjunctions': [],
+                     'All Conjunctions': [], // Lists of aspect_dicts which contain Planets: [planet, planet] and Effects: elementObject
                      'All Trines': [],
                      'All Squares': [],
                      'All Oppositions': [],
@@ -728,12 +733,8 @@ function alchemize(horoscope) {
             //Oppositions give -2
 
             // Use birthtime to determine whether they get day or night elements
-            
-            // Lists of aspect_dicts which contain Planets: [planet, planet] and Effects: elementObject
-            alchmInfo['All Conjunctions'] = [];
-            alchmInfo['All Squares'] = [];
-            alchmInfo['All Trines'] = [];
-            alchmInfo['All Oppositions'] = [];
+
+    ///     ***Aspects do not use planet elements or diurnal and nocturnal. They use the element of the sign
             
             alchmInfo['Planets'][planet]['Aspects'] = {};
             alchmInfo['Planets'][planet]['Aspects']['Total Effect'] = createElementObject();
@@ -811,37 +812,44 @@ function alchemize(horoscope) {
                 console.log("Total Aspect Effect: ", alchmInfo['Total Aspect Effect']);
             };
 
+
             
             //Alchemy Values
             //always last
             var total_effect_multiplier = getAbsoluteElementValue(alchmInfo['Planets'][planet]['Total Effect']);
             alchmInfo['Planets'][planet]['Total Effect Multiplier'] = total_effect_multiplier;
-            var alchemy_values = planetInfo[planet]['Alchemy'];
-            if (alchemy_values['Spirit']) {
-                alchemy_values['Spirit'] *= total_effect_multiplier;
-                alchmInfo['Alchemy Effects']['Total Spirit'] += total_effect_multiplier;
-                alchemy_values['Day Alchemy'] = {'Spirit': total_effect_multiplier}
+            var base_alchemy_values = planetInfo[planet]['Alchemy'];
+            var alchemy_values = {};
+            var spirit_bonus, essence_bonus, matter_bonus, substance_bonus;
+            if (base_alchemy_values['Spirit']) {
+                spirit_bonus = base_alchemy_values['Spirit'] * total_effect_multiplier;
+                alchemy_values['Spirit'] = spirit_bonus;
+                alchmInfo['Alchemy Effects']['Total Spirit'] += spirit_bonus;
+                alchemy_values['Day Alchemy'] = {'Spirit': spirit_bonus};
             }
-            if (alchemy_values['Essence']) {
-                alchemy_values['Essence'] *= total_effect_multiplier;
-                alchmInfo['Alchemy Effects']['Total Essence'] += total_effect_multiplier;
+            if (base_alchemy_values['Essence']) {
+                essence_bonus = base_alchemy_values['Essence'] * total_effect_multiplier;
+                alchemy_values['Essence'] = essence_bonus;
+                alchmInfo['Alchemy Effects']['Total Essence'] += essence_bonus;
                 if (alchemy_values['Spirit']) {
-                    alchemy_values['Night Alchemy'] = {'Essence': total_effect_multiplier}
-                    alchmInfo['Alchemy Effects']['Total Night Essence'] += total_effect_multiplier;
+                    alchemy_values['Night Alchemy'] = {'Essence': essence_bonus}
+                    alchmInfo['Alchemy Effects']['Total Night Essence'] += essence_bonus;
                 } else {
-                    alchemy_values['Day Alchemy'] = {'Essence': total_effect_multiplier}
-                    alchmInfo['Alchemy Effects']['Total Day Essence'] += total_effect_multiplier;
+                    alchemy_values['Day Alchemy'] = {'Essence': essence_bonus}
+                    alchmInfo['Alchemy Effects']['Total Day Essence'] += essence_bonus;
                 }
             }
-            if (alchemy_values['Matter']) {
-                alchemy_values['Matter'] *= total_effect_multiplier;
-                alchmInfo['Alchemy Effects']['Total Matter'] += total_effect_multiplier;
-                alchemy_values['Night Alchemy'] = {'Matter': total_effect_multiplier}
+            if (base_alchemy_values['Matter']) {
+                matter_bonus = base_alchemy_values['Matter'] * total_effect_multiplier;
+                alchemy_values['Matter'] = matter_bonus;
+                alchmInfo['Alchemy Effects']['Total Matter'] += matter_bonus;
+                alchemy_values['Night Alchemy'] = {'Matter': matter_bonus}
             }
-            if (alchemy_values['Substance']) {
-                alchemy_values['Substance'] *= total_effect_multiplier;
-                alchmInfo['Alchemy Effects']['Total Substance'] += total_effect_multiplier;
-                alchemy_values['Night Alchemy'] = {'Substance': total_effect_multiplier}
+            if (base_alchemy_values['Substance']) {
+                substance_bonus = base_alchemy_values['Substance'] * total_effect_multiplier;
+                alchemy_values['Substance'] = substance_bonus;
+                alchmInfo['Alchemy Effects']['Total Substance'] += substance_bonus;
+                alchemy_values['Night Alchemy'] = {'Substance': substance_bonus}
             }
             
             alchmInfo['Planets'][planet]['Alchemy Effects'] = alchemy_values;
@@ -884,10 +892,13 @@ function alchemize(horoscope) {
     const essence = alchmInfo['Alchemy Effects']['Total Essence'];
     const matter = alchmInfo['Alchemy Effects']['Total Matter'];
     const substance = alchmInfo['Alchemy Effects']['Total Substance'];
+    console.log(fire, water, air, earth, spirit, essence, matter, substance);
 
-    alchmInfo['Heat'] = (spirit^2 + fire^2) / (substance + essence + matter + water + air + earth)^2;
-    alchmInfo['Entropy'] = (spirit^2 + substance^2 + fire^2 + air^2) / (essence + matter + earth + water)^2;
-    alchmInfo['Reactivity'] = (spirit^2 + substance^2 + essence^2 + fire^2 + air^2 + water^2) / (matter + earth)^2
+    alchmInfo['Heat'] = (spirit**2 + fire**2) / (substance + essence + matter + water + air + earth)**2;
+    alchmInfo['Entropy'] = (spirit**2 + substance**2 + fire**2 + air**2) / (essence + matter + earth + water)**2;
+    alchmInfo['Reactivity'] = (spirit**2 + substance**2 + essence**2 + fire**2 + air**2 + water**2) / (matter + earth)**2;
+
+    console.log('Heat: ', alchmInfo['Heat']);
 
     return(alchmInfo);
 }
