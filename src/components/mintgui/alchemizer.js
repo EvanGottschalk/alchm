@@ -430,9 +430,13 @@ function getAbsoluteElementValue(element_object) {
     return(absolute_value);
 }
 
-function alchemize(horoscope) {
+function alchemize(birth_info, horoscope) {
     const silent_mode = false;
     const celestialBodies = horoscope.CelestialBodies;
+    let diurnal_or_nocturnal = 'Diurnal';
+    if (birth_info['hour'] < 5 || birth_info['hour'] > 17) {
+        diurnal_or_nocturnal = 'Nocturnal';
+    };
     const metadata = new Object();
     metadata.name = "Alchm NFT";
     metadata.description = "Alchm is unlike any other NFT collection on Earth. Just like people, no two Alchm NFTs are the same, and there is no limit on how many can exist. Your Alchm NFT has no random features, and is completely customized and unique to you. By minting, you gain permanent access to limitless information about your astrology and identity through our sites and apps.";
@@ -524,7 +528,7 @@ function alchemize(horoscope) {
             console.log("--- New Planet:" , planet, '---');
         }
 
-        //Sign
+//Sign
         sign = entry['Sign']['label'];
         alchmInfo['Planets'][planet]["Sign"] = sign;
         if (planet === 'Sun') {
@@ -543,7 +547,7 @@ function alchemize(horoscope) {
         }
 
 
-        //Modality
+//Modality
         const modality = signInfo[sign]['Modality'];
         alchmInfo['Planets'][planet]['Sign Modality'] = modality;
         alchmInfo['# ' + modality] += 1;
@@ -552,7 +556,7 @@ function alchemize(horoscope) {
         };
         
 
-        //Diurnal and Nocturnal Elements
+//Diurnal and Nocturnal Elements
         alchmInfo['Planets'][planet]['Diurnal Element'] = signInfo[sign]['Element'] + ' in ' + planetInfo[planet]['Diurnal Base Element'];
         alchmInfo['Planets'][planet]['Nocturnal Element'] = signInfo[sign]['Element'] + ' in ' + planetInfo[planet]['Nocturnal Base Element'];
         if (!silent_mode) {
@@ -561,11 +565,11 @@ function alchemize(horoscope) {
             console.log("Nocturnal Element: ", alchmInfo['Planets'][planet]['Nocturnal Element']);
         };
 
-        //All planets but Ascendant
+//All planets but Ascendant
         if (planet !== "Ascendant") {
 
 
-            //House
+//House
             house = entry['House']['label'];
             alchmInfo['Planets'][planet]["House"] = house;
             trait_type = planet + " House";
@@ -576,7 +580,7 @@ function alchemize(horoscope) {
             }
             
 
-            //Degree & Decan Calculation
+//Degree & Decan Calculation
             const degree = celestialBodies[planet.toLowerCase()]['ChartPosition']['Ecliptic']['ArcDegreesFormatted30'].split('°')[0];
             var decan_value, decan_string;
             if (degree.length === 1) {
@@ -602,7 +606,7 @@ function alchemize(horoscope) {
             };
         
 
-            //Dignity Effect
+//Dignity Effect
             var dignity_effect = createElementObject();
             const dignity_effect_value = planetInfo[planet]["Dignity Effect"][sign];
             if (dignity_effect_value) {
@@ -629,7 +633,7 @@ function alchemize(horoscope) {
             };
 
 
-            //Minor Arcana for Decan & Cusp (Sun only)
+//Minor Arcana for Decan & Cusp (Sun only)
             if (planet === "Sun") {
                 alchmInfo['Minor Arcana']['Decan'] = signInfo[sun_sign]['Minor Tarot Cards'][decan_string];
                 //Cusp Bonuses
@@ -651,7 +655,7 @@ function alchemize(horoscope) {
             }
 
 
-            //Decan Specific Elemental Effects
+//Decan Specific Elemental Effects
             var decan_effect = createElementObject();
             var planet_index = 0;
             while (planet_index < signInfo[sign]['Decan Effects'][decan_string].length) {
@@ -671,7 +675,7 @@ function alchemize(horoscope) {
             };
 
 
-            //Degree Specific Elemental Effect
+//Degree Specific Elemental Effect
             var degree_effect = createElementObject();
             if (signInfo[sign]['Degree Effects'][planet]) {
                 var degree_minimum = signInfo[sign]['Degree Effects'][planet][0];
@@ -695,7 +699,7 @@ function alchemize(horoscope) {
             };
             
 
-            //Elemental Effect
+//Elemental Effect
             var elemental_effect = createElementObject();
             var elemental_effect_value = 0;
             planet_element_index = 0;
@@ -723,7 +727,7 @@ function alchemize(horoscope) {
             };
 
 
-            //Aspect Effects
+//Aspect Effects
             //Square (90 degrees), Trine (120 degrees), Opposition (180 degrees) & Conjunction (same sign)
 
             //NOTES
@@ -760,24 +764,48 @@ function alchemize(horoscope) {
                 aspect_effect = createElementObject();
                 if (planetInfo[aspect_planet]) {
                     if (aspect_type === 'Conjunction') {
+                        aspect_effect[signInfo[sign]['Element']] += 2;
+                        /*
+
+                        deprecated
+
                         planet_element_index = 0;
                         while (planet_element_index < planetInfo[aspect_planet]['Elements'].length) {
                             aspect_effect[planetInfo[aspect_planet]['Elements'][planet_element_index]] +=1;
                             planet_element_index+=1;
-                        }
+                        }*/
                     } else if (aspect_type === 'Opposition') {
-                        planet_element_index = 0;
+                        aspect_effect[signInfo[sign]['Element']] -= 2;
+                        /*planet_element_index = 0;
+                        
+                        deprecated
+                        
                         while (planet_element_index < planetInfo[aspect_planet]['Elements'].length) {
                             aspect_effect[planetInfo[aspect_planet]['Elements'][planet_element_index]] -=1;
                             planet_element_index+=1;
-                        }
+                        }*/
                     } else if (aspect_type === 'Trine') {
-                        aspect_effect[planetInfo[aspect_planet]['Elements'][0]] +=1;
+                        /*aspect_effect[planetInfo[aspect_planet]['Elements'][0]] +=1;
+                        
+                        deprecated
+                        
+                        */
+                        aspect_effect[signInfo[sign]['Element']] += 1;
                     } else if (aspect_type === 'Square') {
                         if (aspect_planet === 'Ascendant') {
-                            aspect_effect[planetInfo[aspect_planet]['Elements'][0]] +=1;
+                            /*aspect_effect[planetInfo[aspect_planet]['Elements'][0]] +=1;
+                            
+                            deprecated
+                            
+                            */
+                            aspect_effect[signInfo[sign]['Element']] += 1;
                         } else {
-                            aspect_effect[planetInfo[aspect_planet]['Elements'][0]] -=1;
+                            /*aspect_effect[planetInfo[aspect_planet]['Elements'][0]] -=1;
+                            
+                            deprecated
+                            
+                            */
+                            aspect_effect[signInfo[sign]['Element']] -= 1;
                         }
                     }
                 }
@@ -814,9 +842,9 @@ function alchemize(horoscope) {
             };
 
 
-            
-            //Alchemy Values
-            //always last
+
+//Alchemy Values
+//always last
             var total_effect_multiplier = getAbsoluteElementValue(alchmInfo['Planets'][planet]['Total Effect']);
             alchmInfo['Planets'][planet]['Total Effect Multiplier'] = total_effect_multiplier;
             var base_alchemy_values = planetInfo[planet]['Alchemy'];
@@ -865,7 +893,8 @@ function alchemize(horoscope) {
     
     // --- after loop ---
 
-    //Totals
+
+//Totals
     alchmInfo['Total Effect Value'] = combineElementObjects(alchmInfo['Total Dignity Effect'], alchmInfo['Total Effect Value']);
     alchmInfo['Total Effect Value'] = combineElementObjects(alchmInfo['Total Decan Effect'], alchmInfo['Total Effect Value']);
     alchmInfo['Total Effect Value'] = combineElementObjects(alchmInfo['Total Degree Effect'], alchmInfo['Total Effect Value']);
@@ -878,13 +907,13 @@ function alchemize(horoscope) {
     alchmInfo['Alchemy Effects']['A #'] = alchmInfo['Alchemy Effects']['Total Spirit'] + alchmInfo['Alchemy Effects']['Total Essence'] + alchmInfo['Alchemy Effects']['Total Matter'] + alchmInfo['Alchemy Effects']['Total Substance'];
 
     
-    //Modality Percentages    
+//Modality Percentages    
     alchmInfo['% Cardinal'] = alchmInfo['# Cardinal'] / 11;
     alchmInfo['% Fixed'] = alchmInfo['# Fixed'] / 11;
     alchmInfo['% Mutable'] = alchmInfo['# Mutable'] / 11;
 
 
-    //Heat, Entropy & Reactivity
+//Heat, Entropy & Reactivity
     const fire = alchmInfo['Total Effect Value']['Fire'];
     const water = alchmInfo['Total Effect Value']['Water'];
     const air = alchmInfo['Total Effect Value']['Air'];

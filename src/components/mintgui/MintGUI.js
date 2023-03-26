@@ -25,7 +25,7 @@ if (window.location.href.includes('test')) {
 }
 
 var defaultBirthdays = {};
-defaultBirthdays['Evan'] = new Origin({
+defaultBirthdays['Evan'] = {
     year: 1990,
     month: 3, // 0 = January, 11 = December!
     date: 20,
@@ -33,8 +33,8 @@ defaultBirthdays['Evan'] = new Origin({
     minute: 20,
     latitude: 40.7498,
     longitude: -73.7976
-});
-defaultBirthdays["Greg"] = new Origin({
+};
+defaultBirthdays["Greg"] = {
     year: 1991,
     month: 5, // 0 = January, 11 = December!
     date: 23,
@@ -42,7 +42,7 @@ defaultBirthdays["Greg"] = new Origin({
     minute: 24,
     latitude: 40.7498,
     longitude: -73.7976
-});
+};
 ////////////////////////////////////////
 
 const { ethers } = require("ethers");
@@ -566,10 +566,12 @@ function handleSubmitClick (event) {
   } else if (event.target.value.includes('Greg')) {
     name = 'Greg';
   }
-  const alchemy = alchemizer.alchemize(astrologize(name));
-  console.log("Alchm Output: ", alchemy);
-  document.getElementById("alchmInfo").innerHTML = convertDictToString(alchemy);
+  const birth_info = generateBirthInfo(name);
+  const astrology_info = astrologize(birth_info);
+  const alchemy_info = alchemizer.alchemize(birth_info, astrology_info);
   //avatar_URL = midjournizer.midjournize(alchemy);
+  console.log("Alchm Output: ", alchemy_info);
+  document.getElementById("alchmInfo").innerHTML = convertDictToString(alchemy_info);
 }
 
 function activateMintButton() {
@@ -650,11 +652,12 @@ function activateMintButton() {
   return validityMessage;
 }
 
-function astrologize(use_default_birthday=false) {
-  var origin;
+
+function generateBirthInfo(use_default_birthday=false) {
+  var birth_info = {};
   // Uses Evan's birthday automatically without input. Used for testing
   if (use_default_birthday) {
-    origin = defaultBirthdays[use_default_birthday];
+    birth_info = defaultBirthdays[use_default_birthday];
   } else {
     // If "Don't Know" is checked for birth time, 12:00 PM is used
     if (document.getElementById("birthTimeUnknown").value.checked) {
@@ -672,7 +675,7 @@ function astrologize(use_default_birthday=false) {
     }
     // If "Don't Know" is checked for birth location, fetchCoordinates() uses the highest population city in user's time zone
     birthCoordinates = fetchCoordinates();
-    origin = new Origin({
+    birth_info = {
       year: document.getElementById("birthYearEntry").value,
       month: document.getElementById("birthMonthSelect").value, // 0 = January, 11 = December!
       date: document.getElementById("birthDayEntry").value,
@@ -680,9 +683,15 @@ function astrologize(use_default_birthday=false) {
       minute: birthMinute,
       latitude: birthCoordinates["Latitude"],
       longitude: birthCoordinates["Longitude"]
-    });
+    };
   }
-  
+
+  return(birth_info);
+}
+
+
+function astrologize(birth_info) {
+  const origin = new Origin(birth_info);
   const horoscope = new Horoscope({
     origin: new Origin(origin),
     houseSystem: "whole-sign",
@@ -693,6 +702,7 @@ function astrologize(use_default_birthday=false) {
     customOrbs: {},
     language: 'en'
   });
+
   console.log("Sun Sign: ", horoscope.CelestialBodies['sun']['Sign']['label']);
   console.log("Celestial Bodies: ", horoscope.CelestialBodies);
   console.log("Aspects: ", horoscope.Aspects);
