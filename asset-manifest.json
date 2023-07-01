@@ -1,7 +1,7 @@
 {
   "main.css": "/static/css/main.c9021249.chunk.css",
-  "main.js": "/static/js/main.6ad1f423.chunk.js",
-  "main.js.map": "/static/js/main.6ad1f423.chunk.js.map",
+  "main.js": "/static/js/main.d48389b9.chunk.js",
+  "main.js.map": "/static/js/main.d48389b9.chunk.js.map",
   "static/js/1.6b98408e.chunk.js": "/static/js/1.6b98408e.chunk.js",
   "static/js/1.6b98408e.chunk.js.map": "/static/js/1.6b98408e.chunk.js.map",
   "runtime~main.js": "/static/js/runtime~main.229c360f.js",
@@ -15,7 +15,7 @@
   "static/media/team1.png": "/static/media/team1.d20c65c3.png",
   "static/media/team2.png": "/static/media/team2.92b8f624.png",
   "static/media/background1.png": "/static/media/background1.d3daee6d.png",
-  "static/media/index.css": "/static/media/Sequel100Black-45.f76c4727.ttf",
+  "static/media/index.css": "/static/media/Sequel100Black-65.46e04813.ttf",
   "static/media/Roadmap1.ac7c673e.svg": "/static/media/Roadmap1.ac7c673e.svg",
   "static/media/Roadmap2.ab29b40a.svg": "/static/media/Roadmap2.ab29b40a.svg",
   "static/media/Roadmap3.2a32c27c.svg": "/static/media/Roadmap3.2a32c27c.svg",
@@ -28,6 +28,6 @@
   "static/media/OpenSea.2e593fb8.svg": "/static/media/OpenSea.2e593fb8.svg",
   "static/css/main.c9021249.chunk.css.map": "/static/css/main.c9021249.chunk.css.map",
   "index.html": "/index.html",
-  "precache-manifest.981afb9ecb732ad517ea5e4be31bb095.js": "/precache-manifest.981afb9ecb732ad517ea5e4be31bb095.js",
+  "precache-manifest.bc7baeecf8a98651cde4f69b24ac224c.js": "/precache-manifest.bc7baeecf8a98651cde4f69b24ac224c.js",
   "service-worker.js": "/service-worker.js"
 }
