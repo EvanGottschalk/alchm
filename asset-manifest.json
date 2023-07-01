@@ -1,9 +1,9 @@
 {
-  "main.css": "/static/css/main.46f51a25.chunk.css",
-  "main.js": "/static/js/main.bec2954b.chunk.js",
-  "main.js.map": "/static/js/main.bec2954b.chunk.js.map",
-  "static/js/1.8672c172.chunk.js": "/static/js/1.8672c172.chunk.js",
-  "static/js/1.8672c172.chunk.js.map": "/static/js/1.8672c172.chunk.js.map",
+  "main.css": "/static/css/main.c9021249.chunk.css",
+  "main.js": "/static/js/main.6ad1f423.chunk.js",
+  "main.js.map": "/static/js/main.6ad1f423.chunk.js.map",
+  "static/js/1.6b98408e.chunk.js": "/static/js/1.6b98408e.chunk.js",
+  "static/js/1.6b98408e.chunk.js.map": "/static/js/1.6b98408e.chunk.js.map",
   "runtime~main.js": "/static/js/runtime~main.229c360f.js",
   "runtime~main.js.map": "/static/js/runtime~main.229c360f.js.map",
   "static/media/logo.png": "/static/media/logo.44416063.png",
@@ -26,8 +26,8 @@
   "static/media/Twitter.65af8ab0.svg": "/static/media/Twitter.65af8ab0.svg",
   "static/media/Instagram.605becba.svg": "/static/media/Instagram.605becba.svg",
   "static/media/OpenSea.2e593fb8.svg": "/static/media/OpenSea.2e593fb8.svg",
-  "static/css/main.46f51a25.chunk.css.map": "/static/css/main.46f51a25.chunk.css.map",
+  "static/css/main.c9021249.chunk.css.map": "/static/css/main.c9021249.chunk.css.map",
   "index.html": "/index.html",
-  "precache-manifest.9f02a44f171d2ab54d53760c29f22f7b.js": "/precache-manifest.9f02a44f171d2ab54d53760c29f22f7b.js",
+  "precache-manifest.729476a1a0029c9bd91d55038f4132d7.js": "/precache-manifest.729476a1a0029c9bd91d55038f4132d7.js",
   "service-worker.js": "/service-worker.js"
 }
