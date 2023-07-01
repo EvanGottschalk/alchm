@@ -559,14 +559,6 @@ function convertDictToString(dict, depth=0) {
 }
 
 async function handleSubmitClick (event) {
-  var image_URL_element = document.getElementById('imageURL_DALL_E');
-  var image_title_element = document.getElementById('imageTitle_DALL_E');
-  var image_element = document.getElementById('testImage_DALL_E');
-
-  image_URL_element.innerHTML = "DALL-E Image URL: Generating";
-  image_title_element.innerHTML = "DALL-E Image: Generating";
-  image_element.src = '';
-
   var name;
   if (event.target.value.includes('Use Current')) {
     name = false;
@@ -581,15 +573,29 @@ async function handleSubmitClick (event) {
   const astrology_info = astrologize(birth_info);
   const alchemy_info = alchemizer.alchemize(birth_info, astrology_info);
 
-  const imaginizer_info = await imaginizer.imaginize(birth_info, astrology_info, alchemy_info, image_URL_element, image_element);
+  const imaginizer_prompt_info = await imaginizer.generateDALLEprompt(birth_info, astrology_info, alchemy_info);
   //avatar_URL = midjournizer.midjournize(alchemy);
   console.log("Alchm Output: ", alchemy_info);
   document.getElementById("alchmInfo").innerHTML = convertDictToString(alchemy_info);
-  document.getElementById("promptSentence").innerHTML = 'Prompt Sentece: ' + imaginizer_info['sentence'];
-  document.getElementById("promptDict").innerHTML = 'Prompt Dict: ' + convertDictToString(imaginizer_info['dict']);
+  document.getElementById("promptSentence").innerHTML = 'Prompt Sentence: ' + imaginizer_prompt_info['sentence'];
+  document.getElementById("promptDict").innerHTML = 'Prompt Dict: ' + convertDictToString(imaginizer_prompt_info['dict']);
+}
+
+
+async function handleGenerateClick(event) {
+  var image_URL_element = document.getElementById('imageURL_DALL_E');
+  var image_title_element = document.getElementById('imageTitle_DALL_E');
+  var image_element = document.getElementById('testImage_DALL_E');
+
+  image_URL_element.innerHTML = "DALL-E Image URL: Generating";
+  image_title_element.innerHTML = "DALL-E Image: Generating";
+  image_element.src = '';
+
+  console.log('API Key: ', document.getElementById('APIkeyEntry').value);
+
+  test_image_DALL_E = await imaginizer.generateImageFromPrompt(document.getElementById("promptSentence").innerHTML.split('Prompt Sentence: ')[1], image_URL_element, image_element, document.getElementById('APIkeyEntry').value);
 
   var loop_count = 1;
-  test_image_DALL_E = imaginizer_info['URL'];
   console.log('image: ', document.getElementById('testImage_DALL_E').src, window.location.href);
   while ( document.getElementById('testImage_DALL_E').src === window.location.href ) {
     await pause(500);
@@ -601,13 +607,15 @@ async function handleSubmitClick (event) {
       image_URL_element.insertAdjacentText('beforeEnd', '.');
       image_title_element.insertAdjacentText('beforeEnd', '.');
     }
-    //test_image_DALL_E = imaginizer_info['URL'];
+    //test_image_DALL_E = imaginizer_prompt_info['URL'];
     loop_count+=1;
     console.log("Loop Count: ", loop_count);
   }
   image_title_element.innerHTML = "DALL-E Image: ";
-  console.log('URL', imaginizer_info['URL']);
+  console.log('URL', test_image_DALL_E);
 }
+
+
 
 function activateMintButton() {
   var validityMessage = 'Birth info confirmed! Ready to mint!';
@@ -1421,16 +1429,21 @@ return (
       <div id='timeUsed' style={{fontSize:15}}>Time Used: </div>
       <div id='locationUsed' style={{fontSize:15}}>Location Used: </div>
       <div>____________________________________________________________________</div>
-      <div style={{fontSize:30}}>DALL-E Output</div>
-      <div id='imageURL_DALL_E' style={{fontSize:15}}>DALL-E Image URL: </div>
-      <br></br>
-      <div id='imageTitle_DALL_E' style={{fontSize:15}}>DALL-E Image: </div>
-      <img src={test_image_DALL_E} alt='' id='testImage_DALL_E' className='testImage' />
-      <div>____________________________________________________________________</div>
       <div style={{fontSize:30}}>Imaginizer Output</div>
       <div id='promptSentence' style={{fontSize:15}}>Prompt Sentence: </div>
       <br></br>
       <div id='promptDict' style={{fontSize:15}}>Prompt Dict: </div>
+      <div>____________________________________________________________________</div>
+      <div style={{fontSize:30}}>DALL-E Output</div>
+      <span>OpenAI API Key: </span>
+      <input placeholder="" className='birthCountrySelect' id='APIkeyEntry' style={{width: 500}}/>
+      <input value="Generate" className="submitButton1" id="generateButton1" type="submit" style={{fontSize:18, marginLeft:5}} onClick={handleGenerateClick}/>
+      <br></br>
+      <br></br>
+      <div id='imageURL_DALL_E' style={{fontSize:15}}>DALL-E Image URL: </div>
+      <br></br>
+      <div id='imageTitle_DALL_E' style={{fontSize:15}}>DALL-E Image: </div>
+      <img src={test_image_DALL_E} alt='' id='testImage_DALL_E' className='testImage' />
       <div>____________________________________________________________________</div>
       <div style={{fontSize:30}}>Alchemizer Output</div>
       <div id="alchmInfo" className="alchmInfo" style={{fontSize:18}}>Awaiting input...</div>

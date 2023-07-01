@@ -3,7 +3,7 @@
 
 import {callAPI} from './call-api.js';
 
-export default { imaginize }
+export default { imaginize, generateDALLEprompt, generateImageFromPrompt }
 
 
 
@@ -187,26 +187,35 @@ function capitalize(string) {
                               
 
 
-async function imaginize(birth_info, horoscope_dict, alchm_info, image_URL_element, image_element) {
+async function imaginize(birth_info, horoscope_dict, alchm_info, image_URL_element, image_element, API_key) {
   var avatar_prompt_info = await generateDALLEprompt(birth_info, horoscope_dict, alchm_info);
 
-  var API_params = {'text': avatar_prompt_info['sentence'],
-                    'image_name': 'alchm_v0',
-                    'image_URL_element': image_URL_element,
-                    'image_element': image_element};
+  const avatar_URL = generateImageFromPrompt(avatar_prompt_info['sentence'], image_URL_element, image_element, API_key);
+  avatar_prompt_info['URL'] = avatar_URL;
 
-  const API_output = await callAPI('DALLE', API_params);
-  avatar_prompt_info['URL'] = API_output;
-
-  console.log("API Output: ", API_output);
+  console.log("API Output: ", avatar_URL);
 
   return(avatar_prompt_info);
 };
 
+export async function generateImageFromPrompt(avatar_prompt, image_URL_element, image_element, API_key) {
+  var API_params = {'text': avatar_prompt,
+                    'image_name': 'alchm_v0',
+                    'image_URL_element': image_URL_element,
+                    'image_element': image_element,
+                    'API_key': API_key};
 
-//[warrior] [with a lion's head] [with a burning flame aura], [highly detailed photorealistic digital art]
+  const API_output = await callAPI('DALLE', API_params);
 
-async function generateDALLEprompt(birth_info, horoscope_dict, alchm_info) {
+  console.log("API Output: ", API_output);
+
+  return(API_output);
+};
+
+
+
+
+export async function generateDALLEprompt(birth_info, horoscope_dict, alchm_info) {
   const sun_sign = alchm_info['Sun Sign'];
   const dominant_element = alchm_info['Dominant Element'];
   const dominant_modality = alchm_info['Dominant Modality'];

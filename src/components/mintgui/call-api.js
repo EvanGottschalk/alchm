@@ -103,8 +103,8 @@ export async function callAPI(keyName, params) {
     // 
     // DALL-E API
     if (keyName === 'DALLE') {
-      const API_key = process.env.DALLE_API_KEY;
-      //const API_key = '';
+      //const API_key = process.env.DALLE_API_KEY;
+      const API_key = params['API_key'];
       const text = params['text'];
       const image_name = params['image_name'];
 
