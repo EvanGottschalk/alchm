@@ -31,8 +31,8 @@ var planetInfo = {'Sun': {'Dignity Effect': {'Leo': 1,
                                         'Essence': 0,
                                         'Matter': 0,
                                         'Substance': 0},
-                            'Diurnal Base Element': 'Fire',
-                            'Nocturnal Base Element': 'Fire'},
+                            'Diurnal Element': 'Fire',
+                            'Nocturnal Element': 'Fire'},
                     'Moon': {'Dignity Effect': {'Cancer': 1,
                                                 'Taurus': 2,
                                                 'Capricorn': -1,
@@ -42,8 +42,8 @@ var planetInfo = {'Sun': {'Dignity Effect': {'Leo': 1,
                                          'Essence': 1,
                                          'Matter': 1,
                                          'Substance': 0},
-                             'Diurnal Base Element': 'Water',
-                             'Nocturnal Base Element': 'Water'},
+                             'Diurnal Element': 'Water',
+                             'Nocturnal Element': 'Water'},
                     'Mercury': {'Dignity Effect': {'Gemini': 1, 
                                                    'Virgo': 3,
                                                    'Sagittarius': 1, 
@@ -53,8 +53,8 @@ var planetInfo = {'Sun': {'Dignity Effect': {'Leo': 1,
                                             'Essence': 0,
                                             'Matter': 0,
                                             'Substance': 1},
-                                'Diurnal Base Element': 'Air',
-                                'Nocturnal Base Element': 'Earth'},
+                                'Diurnal Element': 'Air',
+                                'Nocturnal Element': 'Earth'},
                     'Venus': {'Dignity Effect': {'Libra': 1, 
                                                  'Taurus': 1,
                                                  'Pisces': 2, 
@@ -66,8 +66,8 @@ var planetInfo = {'Sun': {'Dignity Effect': {'Leo': 1,
                                           'Essence': 1,
                                           'Matter': 1,
                                           'Substance': 0},
-                              'Diurnal Base Element': 'Water',
-                              'Nocturnal Base Element': 'Earth'},
+                              'Diurnal Element': 'Water',
+                              'Nocturnal Element': 'Earth'},
                     'Mars': {'Dignity Effect': {'Aries': 1,
                                                 'Scorpio': 1, 
                                                 'Capricorn': 2,
@@ -79,8 +79,8 @@ var planetInfo = {'Sun': {'Dignity Effect': {'Leo': 1,
                                          'Essence': 1,
                                          'Matter': 1,
                                          'Substance': 0},
-                             'Diurnal Base Element': 'Fire',
-                             'Nocturnal Base Element': 'Water'},
+                             'Diurnal Element': 'Fire',
+                             'Nocturnal Element': 'Water'},
                     'Jupiter': {'Dignity Effect': {'Pisces': 1,
                                                    'Sagittarius': 1,
                                                    'Cancer': 2,
@@ -92,8 +92,8 @@ var planetInfo = {'Sun': {'Dignity Effect': {'Leo': 1,
                                             'Essence': 1,
                                             'Matter': 0,
                                             'Substance': 0},
-                                'Diurnal Base Element': 'Air',
-                                'Nocturnal Base Element': 'Fire'},
+                                'Diurnal Element': 'Air',
+                                'Nocturnal Element': 'Fire'},
                     'Saturn': {'Dignity Effect': {'Aquarius': 1,
                                                   'Capricorn': 1,
                                                   'Libra': 2,
@@ -105,8 +105,8 @@ var planetInfo = {'Sun': {'Dignity Effect': {'Leo': 1,
                                            'Essence': 0,
                                            'Matter': 1,
                                            'Substance': 0},
-                               'Diurnal Base Element': 'Air',
-                               'Nocturnal Base Element': 'Earth'},
+                               'Diurnal Element': 'Air',
+                               'Nocturnal Element': 'Earth'},
                     'Uranus': {'Dignity Effect': {'Aquarius': 1,
                                                   'Scorpio': 2,
                                                   'Taurus': -3},
@@ -115,8 +115,8 @@ var planetInfo = {'Sun': {'Dignity Effect': {'Leo': 1,
                                            'Essence': 1,
                                            'Matter': 1,
                                            'Substance': 0},
-                               'Diurnal Base Element': 'Water',
-                               'Nocturnal Base Element': 'Air'},
+                               'Diurnal Element': 'Water',
+                               'Nocturnal Element': 'Air'},
                     'Neptune': {'Dignity Effect': {'Pisces': 1,
                                                    'Cancer': 2,
                                                    'Virgo': -1,
@@ -126,8 +126,8 @@ var planetInfo = {'Sun': {'Dignity Effect': {'Leo': 1,
                                             'Essence': 1,
                                             'Matter': 0,
                                             'Substance': 1},
-                                'Diurnal Base Element': 'Water',
-                                'Nocturnal Base Element': 'Water'},
+                                'Diurnal Element': 'Water',
+                                'Nocturnal Element': 'Water'},
                     'Pluto': {'Dignity Effect': {'Scorpio': 1,
                                                  'Leo': 2,
                                                  'Taurus': -1,
@@ -137,10 +137,10 @@ var planetInfo = {'Sun': {'Dignity Effect': {'Leo': 1,
                                           'Essence': 1,
                                           'Matter': 1,
                                           'Substance': 0},
-                              'Diurnal Base Element': 'Earth',
-                              'Nocturnal Base Element': 'Water'},
-                    'Ascendant': {'Diurnal Base Element': 'Earth',
-                                  'Nocturnal Base Element': 'Earth'}};
+                              'Diurnal Element': 'Earth',
+                              'Nocturnal Element': 'Water'},
+                    'Ascendant': {'Diurnal Element': 'Earth',
+                                  'Nocturnal Element': 'Earth'}};
 
 
 
@@ -421,6 +421,23 @@ function combineElementObjects (element_object_1, element_object_2) {
     return(combined_object);
 }
 
+// Different ranks for largest, second largest, third largest and fourth largest (ranks 1, 2, 3 and 4)
+function getElementRanking(element_object, rank) {
+    var element_rank_dict = {1: '',
+                             2: '',
+                             3: '',
+                             4: ''};
+    var largest_element_value = 0;
+    for (const element in element_object) {
+        if (element_object[element] > largest_element_value) {
+            largest_element_value = element_object[element];
+            element_rank_dict[1] = element;
+        };
+    };
+
+    return(element_rank_dict);
+};
+
 function getAbsoluteElementValue(element_object) {
     var absolute_value = 0;
     absolute_value += element_object['Fire'];
@@ -430,7 +447,8 @@ function getAbsoluteElementValue(element_object) {
     return(absolute_value);
 }
 
-function alchemize(birth_info, horoscope) {
+function alchemize(birth_info, horoscope_dict) {
+    var horoscope = horoscope_dict['tropical'];
     const silent_mode = false;
     const celestialBodies = horoscope.CelestialBodies;
     let diurnal_or_nocturnal = 'Diurnal';
@@ -441,7 +459,8 @@ function alchemize(birth_info, horoscope) {
     metadata.name = "Alchm NFT";
     metadata.description = "Alchm is unlike any other NFT collection on Earth. Just like people, no two Alchm NFTs are the same, and there is no limit on how many can exist. Your Alchm NFT has no random features, and is completely customized and unique to you. By minting, you gain permanent access to limitless information about your astrology and identity through our sites and apps.";
     metadata.attributes = [];
-    var alchmInfo = {'Major Arcana': {'Sun': "",
+    var alchmInfo = {'Sun Sign': '',
+                     'Major Arcana': {'Sun': "",
                                       'Ascendant': ""}, 
                      'Minor Arcana': {'Decan': "",
                                       'Cusp': "None"},
@@ -458,6 +477,7 @@ function alchemize(birth_info, horoscope) {
                      'Total Aspect Effect': createElementObject(),
                      'Total Elemental Effect': createElementObject(),
                      'Total Effect Value': createElementObject(),
+                     'Dominant Element': '',
                      'Total Chart Absolute Effect': 0,
                      'Heat': 0,
                      'Entropy': 0,
@@ -469,10 +489,12 @@ function alchemize(birth_info, horoscope) {
                      '% Cardinal': 0,
                      '% Fixed': 0,
                      '% Mutable': 0,
+                     'Dominant Modality': '',
                      'All Conjunctions': [], // Lists of aspect_dicts which contain Planets: [planet, planet] and Effects: elementObject
                      'All Trines': [],
                      'All Squares': [],
                      'All Oppositions': [],
+                     'Stelliums': [],
                      'Signs': {
                         "Aries": {},
                         "Taurus": {},
@@ -500,14 +522,15 @@ function alchemize(birth_info, horoscope) {
                         "Ascendant": {}}
                      };
     const rising_sign = horoscope.Ascendant['Sign']['label'];
-    planetInfo['Ascendant']['Elements'] = [signInfo[rising_sign]['Element'], signInfo[rising_sign]['Element']];
+    //planetInfo['Ascendant']['Elements'] = [signInfo[rising_sign]['Element'], signInfo[rising_sign]['Element']];
+    planetInfo['Ascendant']['Diurnal Element'] = signInfo[rising_sign]['Element'];
+    planetInfo['Ascendant']['Nocturnal Element'] = signInfo[rising_sign]['Element'];
     alchmInfo['Major Arcana']['Ascendant'] = signInfo[rising_sign]['Major Tarot Card'];
 
     var planet, sign, house;
     var entry, trait_type, value;
     var sun_sign;
     var celestial_bodies_index = 0;
-    var planet_element_index = 0;
     while (celestial_bodies_index < 11) {
         
         if (celestial_bodies_index === 10) {
@@ -534,6 +557,7 @@ function alchemize(birth_info, horoscope) {
         if (planet === 'Sun') {
             trait_type = '"Sign" (Sun Sign)';
             sun_sign = sign;
+            alchmInfo['Sun Sign'] = sun_sign;
             alchmInfo['Major Arcana']['Sun'] = signInfo[sun_sign]['Major Tarot Card'];
             alchmInfo['Chart Ruler'] = signInfo[sun_sign]['Ruler'];
             //metadata.image = imageDict[sign];
@@ -557,8 +581,8 @@ function alchemize(birth_info, horoscope) {
         
 
 //Diurnal and Nocturnal Elements
-        alchmInfo['Planets'][planet]['Diurnal Element'] = signInfo[sign]['Element'] + ' in ' + planetInfo[planet]['Diurnal Base Element'];
-        alchmInfo['Planets'][planet]['Nocturnal Element'] = signInfo[sign]['Element'] + ' in ' + planetInfo[planet]['Nocturnal Base Element'];
+        alchmInfo['Planets'][planet]['Diurnal Element'] = signInfo[sign]['Element'] + ' in ' + planetInfo[planet]['Diurnal Element'];
+        alchmInfo['Planets'][planet]['Nocturnal Element'] = signInfo[sign]['Element'] + ' in ' + planetInfo[planet]['Nocturnal Element'];
         if (!silent_mode) {
             console.log('');
             console.log("Diurnal Element: ", alchmInfo['Planets'][planet]['Diurnal Element']);
@@ -614,12 +638,15 @@ function alchemize(birth_info, horoscope) {
                     dignity_effect[signInfo[sign]['Element']] = 1 * (dignity_effect_value / Math.abs(dignity_effect_value));
                 }
                 if (Math.abs(dignity_effect_value) > 1) {
+                    /* Deprecated
                     planet_element_index = 0;
                     const planet_elements = planetInfo[planet]['Elements'];
                     while (planet_element_index < planet_elements.length) {
                         dignity_effect[planet_elements[planet_element_index]] += (1 * (dignity_effect_value / Math.abs(dignity_effect_value)));
                         planet_element_index += 1;
-                    }
+                    } */
+                    dignity_effect[planetInfo[planet]['Diurnal Element']] += (1 * (dignity_effect_value / Math.abs(dignity_effect_value)));
+                    dignity_effect[planetInfo[planet]['Nocturnal Element']] += (1 * (dignity_effect_value / Math.abs(dignity_effect_value)));
                 }
             }
             alchmInfo['Planets'][planet]['Dignity Effect'] = dignity_effect;
@@ -681,11 +708,15 @@ function alchemize(birth_info, horoscope) {
                 var degree_minimum = signInfo[sign]['Degree Effects'][planet][0];
                 var degree_maximum = signInfo[sign]['Degree Effects'][planet][1];
                 if (degree >= degree_minimum && degree < degree_maximum) {
+                    /*
                     planet_element_index = 0;
                     while (planet_element_index < planetInfo[planet]['Elements'].length) {
                         degree_effect[planetInfo[planet]['Elements'][planet_element_index]] += 1;
                         planet_element_index += 1;
-                    } 
+                    }
+                    */
+                    degree_effect[planetInfo[planet]['Diurnal Element']] += 1;
+                    degree_effect[planetInfo[planet]['Nocturnal Element']] += 1;
                 }
             }
             alchmInfo['Planets'][planet]['Degree Effect'] = degree_effect;
@@ -701,7 +732,9 @@ function alchemize(birth_info, horoscope) {
 
 //Elemental Effect
             var elemental_effect = createElementObject();
-            var elemental_effect_value = 0;
+            
+            
+            /*var elemental_effect_value = 0;
             planet_element_index = 0;
             while (planet_element_index < planetInfo[planet]['Elements'].length) {
                 if (planetInfo[planet]['Elements'][planet_element_index] === signInfo[sign]['Element'] && elemental_effect_value === 0) {
@@ -709,13 +742,34 @@ function alchemize(birth_info, horoscope) {
                     elemental_effect_value = 1;
                 }
                 planet_element_index+=1;
-            }
+            } deprecated */
+            
+
+            if (planet !== "Sun" && planet !== "Moon") {
+                if (planetInfo[planet]['Diurnal Element'] === signInfo[sign]['Element']) {
+                    elemental_effect[signInfo[sign]['Element']] += 1;
+                } else if (planetInfo[planet]['Nocturnal Element'] === signInfo[sign]['Element']) {
+                    elemental_effect[signInfo[sign]['Element']] += 1;
+                } else {
+                    elemental_effect[signInfo[sign]['Element']] -= 1;
+                };
+            } else {
+                if (planetInfo[planet][diurnal_or_nocturnal + ' Element'] === signInfo[sign]['Element']) {
+                    elemental_effect[signInfo[sign]['Element']] += 1;
+                };
+            };
+
+
+            /*
             if (elemental_effect_value === 0) {
                 if (planet !== "Sun" && planet !== "Moon") {
                     elemental_effect[signInfo[sign]['Element']] -= 1;
                     elemental_effect_value = -1;
                 }
-            }
+            };
+            */
+
+
             alchmInfo['Planets'][planet]['Elemental Effect'] = elemental_effect;
             alchmInfo['Planets'][planet]['Total Effect'] = combineElementObjects(alchmInfo['Planets'][planet]['Total Effect'], elemental_effect);
             alchmInfo['Total Elemental Effect'] = combineElementObjects(alchmInfo['Total Elemental Effect'], elemental_effect);
@@ -815,6 +869,7 @@ function alchemize(birth_info, horoscope) {
                 alchmInfo['Planets'][planet]['Total Effect'] = combineElementObjects(aspect_effect, alchmInfo['Planets'][planet]['Total Effect']);
                 alchmInfo['Total Aspect Effect'] = combineElementObjects(aspect_effect, alchmInfo['Total Aspect Effect']);
                 aspect_dict['Effects'] = aspect_effect;
+                aspect_dict['Sign'] = sign;
                 if (alchmInfo['All ' + aspect_type + 's']) {
                     var aspect_dict_index = 0;
                     var pair_already_recorded = false;
@@ -894,6 +949,24 @@ function alchemize(birth_info, horoscope) {
     // --- after loop ---
 
 
+//Stelliums
+    //Stellium = n planets are conjunct with each other 
+    //In the case of a stellium, 2 bonuses:
+    //1. Bonus of +n of element of sign
+    //2. Bonus of (1 + m) of element of sign per planet whose element matches the sign,
+    //   where m is the number of other planets with a matching sign
+    //      example: 3 planets in Aries, 2 have Fire
+    //      output: Bonus of 3 Fire for 3 planets in Aries, plus bonus of 1 + 2 for having a 1st and then 2nd planet whose element
+    //              matches the sign, for a total of +6 Fire.
+    //3. Bonus of 1 per planet involved in an elemental match that is not the element of the sign
+    //      example: 3 planets in Aries, 3 have water
+    //      output: Bonus of 3 water
+    //      example: 3 planets in Aries, 2 have water
+    //      output: Bonus of 2 water
+    //      example: 3 planets in Aries, 1 has water
+    //      output: Bonus of 0 water
+
+
 //Totals
     alchmInfo['Total Effect Value'] = combineElementObjects(alchmInfo['Total Dignity Effect'], alchmInfo['Total Effect Value']);
     alchmInfo['Total Effect Value'] = combineElementObjects(alchmInfo['Total Decan Effect'], alchmInfo['Total Effect Value']);
@@ -901,16 +974,27 @@ function alchemize(birth_info, horoscope) {
     alchmInfo['Total Effect Value'] = combineElementObjects(alchmInfo['Total Aspect Effect'], alchmInfo['Total Effect Value']);
     alchmInfo['Total Effect Value'] = combineElementObjects(alchmInfo['Total Elemental Effect'], alchmInfo['Total Effect Value']);
     console.log('Total Effect Value: ', alchmInfo['Total Effect Value'])
+    alchmInfo['Dominant Element'] = getElementRanking(alchmInfo['Total Effect Value'])[1];
+
 
     alchmInfo['Total Chart Absolute Effect'] = getAbsoluteElementValue(alchmInfo['Total Effect Value']); //sum of Total Effect Multipliers regardless of element
 
     alchmInfo['Alchemy Effects']['A #'] = alchmInfo['Alchemy Effects']['Total Spirit'] + alchmInfo['Alchemy Effects']['Total Essence'] + alchmInfo['Alchemy Effects']['Total Matter'] + alchmInfo['Alchemy Effects']['Total Substance'];
 
     
-//Modality Percentages    
+//Modality Percentages & Dominance  
     alchmInfo['% Cardinal'] = alchmInfo['# Cardinal'] / 11;
     alchmInfo['% Fixed'] = alchmInfo['# Fixed'] / 11;
     alchmInfo['% Mutable'] = alchmInfo['# Mutable'] / 11;
+
+    if ((alchmInfo['% Cardinal'] >= alchmInfo['% Fixed']) && (alchmInfo['% Cardinal'] >= alchmInfo['% Mutable'])) {
+        alchmInfo['Dominant Modality'] = 'Cardinal';
+    } else if ((alchmInfo['% Fixed'] >= alchmInfo['% Cardinal']) && (alchmInfo['% Fixed'] >= alchmInfo['% Mutable'])) {
+        alchmInfo['Dominant Modality'] = 'Fixed';
+    } else if ((alchmInfo['% Mutable'] >= alchmInfo['% Cardinal']) && (alchmInfo['% Mutable'] >= alchmInfo['% Fixed'])) {
+        alchmInfo['Dominant Modality'] = 'Mutable';
+    };
+
 
 
 //Heat, Entropy & Reactivity

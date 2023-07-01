@@ -11,7 +11,7 @@ import { Origin, Horoscope } from "../../../node_modules/circular-natal-horoscop
 import pinToIPFS from "./pin-to-ipfs.js";
 import createAlchmMetadata from "./create-alchm-metadata";
 import alchemizer from "./alchemizer";
-//import midjournizer from './midjournizer'
+import imaginizer from "./imaginizer";
 
 import locationCSV from "./allLocationsUSfirst.csv";
 
@@ -50,6 +50,7 @@ const { ethers } = require("ethers");
 const openSeaLinkDelay = 8;
 
 let address, signer, provider;
+let test_image_DALL_E;
 var mintButtonActive = false;
 
 var avatar_URL = '#';
@@ -557,7 +558,15 @@ function convertDictToString(dict, depth=0) {
   return(new_string);
 }
 
-function handleSubmitClick (event) {
+async function handleSubmitClick (event) {
+  var image_URL_element = document.getElementById('imageURL_DALL_E');
+  var image_title_element = document.getElementById('imageTitle_DALL_E');
+  var image_element = document.getElementById('testImage_DALL_E');
+
+  image_URL_element.innerHTML = "DALL-E Image URL: Generating";
+  image_title_element.innerHTML = "DALL-E Image: Generating";
+  image_element.src = '';
+
   var name;
   if (event.target.value.includes('Use Current')) {
     name = false;
@@ -565,13 +574,39 @@ function handleSubmitClick (event) {
     name = 'Evan';
   } else if (event.target.value.includes('Greg')) {
     name = 'Greg';
+  } else if (event.target.value.includes('Moment')) {
+    name = 'Moment';
   }
   const birth_info = generateBirthInfo(name);
   const astrology_info = astrologize(birth_info);
   const alchemy_info = alchemizer.alchemize(birth_info, astrology_info);
+
+  const imaginizer_info = await imaginizer.imaginize(birth_info, astrology_info, alchemy_info, image_URL_element, image_element);
   //avatar_URL = midjournizer.midjournize(alchemy);
   console.log("Alchm Output: ", alchemy_info);
   document.getElementById("alchmInfo").innerHTML = convertDictToString(alchemy_info);
+  document.getElementById("promptSentence").innerHTML = 'Prompt Sentece: ' + imaginizer_info['sentence'];
+  document.getElementById("promptDict").innerHTML = 'Prompt Dict: ' + convertDictToString(imaginizer_info['dict']);
+
+  var loop_count = 1;
+  test_image_DALL_E = imaginizer_info['URL'];
+  console.log('image: ', document.getElementById('testImage_DALL_E').src, window.location.href);
+  while ( document.getElementById('testImage_DALL_E').src === window.location.href ) {
+    await pause(500);
+    if (loop_count > 3) {
+      image_URL_element.innerHTML = "DALL-E Image URL: Generating";
+      image_title_element.innerHTML = "DALL-E Image: Generating";
+      loop_count = 0;
+    } else {
+      image_URL_element.insertAdjacentText('beforeEnd', '.');
+      image_title_element.insertAdjacentText('beforeEnd', '.');
+    }
+    //test_image_DALL_E = imaginizer_info['URL'];
+    loop_count+=1;
+    console.log("Loop Count: ", loop_count);
+  }
+  image_title_element.innerHTML = "DALL-E Image: ";
+  console.log('URL', imaginizer_info['URL']);
 }
 
 function activateMintButton() {
@@ -653,11 +688,30 @@ function activateMintButton() {
 }
 
 
-function generateBirthInfo(use_default_birthday=false) {
+function generateBirthInfo(birth_input_type=false) {
   var birth_info = {};
   // Uses Evan's birthday automatically without input. Used for testing
-  if (use_default_birthday) {
-    birth_info = defaultBirthdays[use_default_birthday];
+  if (birth_input_type) {
+    if (birth_input_type === 'Moment') {
+      birthCoordinates = fetchCoordinates(true);
+      const dateObject = new Date();
+      const year = dateObject.getFullYear();
+      const month = dateObject.getMonth();
+      const date = dateObject.getDate();
+      const hour = dateObject.getHours();
+      const minute = dateObject.getMinutes();
+      birth_info = {
+        year: year,
+        month: month, // 0 = January, 11 = December!
+        date: date,
+        hour: hour,
+        minute: minute,
+        latitude: birthCoordinates["Latitude"],
+        longitude: birthCoordinates["Longitude"]
+      };
+    } else {
+      birth_info = defaultBirthdays[birth_input_type];
+    }
   } else {
     // If "Don't Know" is checked for birth time, 12:00 PM is used
     if (document.getElementById("birthTimeUnknown").value.checked) {
@@ -676,9 +730,9 @@ function generateBirthInfo(use_default_birthday=false) {
     // If "Don't Know" is checked for birth location, fetchCoordinates() uses the highest population city in user's time zone
     birthCoordinates = fetchCoordinates();
     birth_info = {
-      year: document.getElementById("birthYearEntry").value,
-      month: document.getElementById("birthMonthSelect").value, // 0 = January, 11 = December!
-      date: document.getElementById("birthDayEntry").value,
+      year: parseInt(document.getElementById("birthYearEntry").value),
+      month: parseInt(document.getElementById("birthMonthSelect").value), // 0 = January, 11 = December!
+      date: parseInt(document.getElementById("birthDayEntry").value),
       hour: birthHour,
       minute: birthMinute,
       latitude: birthCoordinates["Latitude"],
@@ -686,37 +740,109 @@ function generateBirthInfo(use_default_birthday=false) {
     };
   }
 
+  birth_info['Gender'] = document.getElementById('genderSelect').value;
+
+  updateInfoUsed(birth_info);
+
+  console.log('Birth Info: ', birth_info);
   return(birth_info);
+}
+
+function updateInfoUsed(birth_info) {
+  var date_used_element = document.getElementById('dateUsed');
+  var time_used_element = document.getElementById('timeUsed');
+  var location_used_element = document.getElementById('locationUsed');
+
+  var date_used_text = 'Date Used: ';
+  var time_used_text = 'Time Used (UTC): ';
+  var location_used_text = 'Location Used: ';
+
+  // Date Text
+  date_used_text += ((birth_info.month + 1).toString()) + '/' + birth_info.date.toString() + '/' + birth_info.year.toString();
+  date_used_element.innerHTML = date_used_text;
+
+  // Time 
+  var minute_text;
+  if (birth_info.minute < 1) {
+    minute_text = '00';
+  } else if (birth_info.minute < 10) {
+    minute_text = '0' + birth_info.minute.toString();
+  } else {
+    minute_text = birth_info.minute.toString();
+  }
+  time_used_text += birth_info.hour.toString() + ':' + minute_text;
+  time_used_element.innerHTML = time_used_text;
+
+  // Location Text
+  location_used_text += birth_info.latitude.toString() + '°, ' + birth_info.longitude.toString() + '°';
+  location_used_element.innerHTML = location_used_text;
 }
 
 
 function astrologize(birth_info) {
   const origin = new Origin(birth_info);
-  const horoscope = new Horoscope({
+  const tropical_horoscope = new Horoscope({
     origin: new Origin(origin),
-    houseSystem: "whole-sign",
+    houseSystem: "placidus",
     zodiac: "tropical",
     aspectPoints: ['bodies', 'points', 'angles'],
     aspectWithPoints: ['bodies', 'points', 'angles'],
-    aspectTypes: ["major", "minor"],
-    customOrbs: {},
+    aspectTypes: ["major"],
+    customOrbs: {
+      conjunction: 10,
+      opposition: 10,
+      trine: 8,
+      square: 7,
+      sextile: 6,
+      "semi-square": 1,
+      "semi-sextile": 1,
+    },
     language: 'en'
   });
 
-  console.log("Sun Sign: ", horoscope.CelestialBodies['sun']['Sign']['label']);
-  console.log("Celestial Bodies: ", horoscope.CelestialBodies);
-  console.log("Aspects: ", horoscope.Aspects);
-  console.log("Ascendant: ", horoscope.Ascendant);
+  console.log('_____Tropical Outputs____');
+  console.log("Sun Sign: ", tropical_horoscope.CelestialBodies['sun']['Sign']['label']);
+  console.log("Celestial Bodies: ", tropical_horoscope.CelestialBodies);
+  console.log("Aspects: ", tropical_horoscope.Aspects);
+  console.log("Ascendant: ", tropical_horoscope.Ascendant);
+
+  const sidereal_horoscope = new Horoscope({
+    origin: new Origin(origin),
+    houseSystem: "placidus",
+    zodiac: "sidereal",
+    aspectPoints: ['bodies', 'points', 'angles'],
+    aspectWithPoints: ['bodies', 'points', 'angles'],
+    aspectTypes: ["major"],
+    customOrbs: {
+      conjunction: 10,
+      opposition: 10,
+      trine: 8,
+      square: 7,
+      sextile: 6,
+      "semi-square": 1,
+      "semi-sextile": 1,
+    },
+    language: 'en'
+  });
+
+  console.log('_____Sidereal Outputs____');
+  console.log("Sun Sign: ", sidereal_horoscope.CelestialBodies['sun']['Sign']['label']);
+  console.log("Celestial Bodies: ", sidereal_horoscope.CelestialBodies);
+  console.log("Aspects: ", sidereal_horoscope.Aspects);
+  console.log("Ascendant: ", sidereal_horoscope.Ascendant);
   //horoscope.CelestialBodies['all'].forEach(entry =>
   //  console.log(entry['label'], entry['Sign']['label'], entry['House']['label']))
-  return(horoscope);
+  return({'tropical': tropical_horoscope,
+          'sidereal': sidereal_horoscope});
 }
 
 async function mintNFT() {
   const nftContract = new ethers.Contract(contractAddress, iface,signer);
-  const horoscope = astrologize();
-  const alchemy = alchemizer.alchemize(horoscope);
-  const NFTmetadata = await createAlchmMetadata.createMetadata(horoscope.CelestialBodies);
+  const birth_info = generateBirthInfo();
+  const horoscope = astrologize(birth_info);
+  const alchemy = alchemizer.alchemize(birth_info, horoscope);
+  const imaginizer_info = await imaginizer.imaginze(birth_info, horoscope, alchemy);
+  const NFTmetadata = await createAlchmMetadata.createMetadata(horoscope['tropical'].CelestialBodies);
   console.log("Metadata: ", NFTmetadata);
   const metadataURI = pinToIPFS.pinMetadata(NFTmetadata);
   metadataURI
@@ -906,9 +1032,12 @@ function handleCityChange(event) {
   activateMintButton();
 }
 
-function fetchCoordinates() {
+function fetchCoordinates(guess_location = false) {
   // If "Don't Know" is checked for birth location, the highest population city in the user's current time zone is used
   if (document.getElementById("birthLocationUnknown").checked) {
+    guess_location = true;
+  };
+  if (guess_location) {
     const dateObject = new Date();
     var UTCoffset = dateObject.toString().split('GMT')[1].split(' (')[0];
     console.log('User UTC Offset: ', UTCoffset);
@@ -932,6 +1061,10 @@ function fetchCoordinates() {
   }
   console.log(birthCoordinates);
   return birthCoordinates;
+}
+
+async function handleGenderSelect(event) {
+  console.log('gender click');
 }
 
 const populousLocationsByTimeZone = {'-1100': {'Abbreviation': 'SST',
@@ -1245,6 +1378,22 @@ return (
                 <input placeholder="City" list="cityList" disabled="{true}" className='birthCitySelect' id='birthCitySelect' onChange={handleCityChange}/>
                   <datalist id="cityList"></datalist>
             </div>
+            <div className='birthLocationInputContainer' id='personalizationInputContainer'>
+              <span className='birthLocationTitle' id='personalizationTitle'>Personalization</span>
+              <span className='locationGuessText' id='personalizationOptionalText'>(this section is optional)</span>
+              <br></br>
+                <input className="birthLocationUnknown" id="genderToggle" type="checkbox" onChange={handleGenderSelect} />
+                  <label className="locationUnknownLabel" id="locationUnknownLabel">Select a Gender</label>
+                <br></br>
+                <select className='birthCountrySelect' id='genderSelect' onChange={handleHourChange}>
+                  <option value="Other">--</option>
+                  <option value="Female">Female</option>
+                  <option value="Male">Male</option>
+                  <option value="Other">Other</option>
+                  <option value="Other">Gender is a Myth</option>
+                </select>
+                <br></br>
+            </div>
             <span className="validityMessage" id="validityMessage"/>
           </div>
           <div id="mintButton" className='mintButton' onClick={handleMintClick}>{(isConnected) ? 'MINT NOW' : 'CONNECT WALLET'}</div>
@@ -1263,11 +1412,28 @@ return (
       <div className="submitButtons" id="submitButtons">
         <input value="Use Current Input" className="submitButton1" id="submitButton1" type="submit" style={{fontSize:18, marginRight:20}} onClick={handleSubmitClick}/>
         <input value="Use Evan's Info" className="submitButton2" id="submitButton2" type="submit" style={{fontSize:18, marginRight:20}} onClick={handleSubmitClick}/>
-        <input value="Use Greg's Info" className="submitButton3" id="submitButton3" type="submit" style={{fontSize:18}} onClick={handleSubmitClick}/>
+        <input value="Use Greg's Info" className="submitButton3" id="submitButton3" type="submit" style={{fontSize:18, marginRight:20}} onClick={handleSubmitClick}/>
+        <input value="Chart of the Moment" className="submitButton4" id="submitButton4" type="submit" style={{fontSize:18, marginRight:20}} onClick={handleSubmitClick}/>
       </div>
       <div>____________________________________________________________________</div>
-      <div style={{fontSize:30}}>Alchm Info</div>
-      <div id="alchmInfo" className="alchmInfo" style={{fontSize:18}}>NONE</div>
+      <div style={{fontSize:30}}>Astrologizer Input</div>
+      <div id='dateUsed' style={{fontSize:15}}>Date Used: </div>
+      <div id='timeUsed' style={{fontSize:15}}>Time Used: </div>
+      <div id='locationUsed' style={{fontSize:15}}>Location Used: </div>
+      <div>____________________________________________________________________</div>
+      <div style={{fontSize:30}}>DALL-E Output</div>
+      <div id='imageURL_DALL_E' style={{fontSize:15}}>DALL-E Image URL: </div>
+      <br></br>
+      <div id='imageTitle_DALL_E' style={{fontSize:15}}>DALL-E Image: </div>
+      <img src={test_image_DALL_E} alt='' id='testImage_DALL_E' className='testImage' />
+      <div>____________________________________________________________________</div>
+      <div style={{fontSize:30}}>Imaginizer Output</div>
+      <div id='promptSentence' style={{fontSize:15}}>Prompt Sentence: </div>
+      <br></br>
+      <div id='promptDict' style={{fontSize:15}}>Prompt Dict: </div>
+      <div>____________________________________________________________________</div>
+      <div style={{fontSize:30}}>Alchemizer Output</div>
+      <div id="alchmInfo" className="alchmInfo" style={{fontSize:18}}>Awaiting input...</div>
     </div>
   </div>
 )

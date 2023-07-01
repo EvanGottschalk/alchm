@@ -9,14 +9,7 @@
   align-items: center;
 }
 
-.navbarContainer {
-  height: 100%;
-  width: 100%;
-  max-width: 1850px;
-  margin: 0px 0px 0px 0px;
-  display: flex;
-  align-items: flex-end;
-}
+
 
 .navbarLeft {
   flex: 25%;
@@ -34,15 +27,7 @@
   flex-direction: column;
 }
 
-.navbarBox {
-  margin-top: 90px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  max-width: 480px;
-  padding-bottom: 0px;
-}
+
 
 .navbarBoxTitle {
   font-family: 'Sequel100Black-65';
@@ -305,7 +290,7 @@
 
 .birthdayInputContainer {
   justify-items: left;
-  width: 385px;
+  width: 425px;
 }
 
 .birthdayTitle {
@@ -339,7 +324,7 @@
 .birthTimeInputContainer {
   margin: 20px 0px 0px 0px;
   justify-items: left;
-  width: 385px;
+  width: 425px;
 }
 
 .birthTimeTitle {
@@ -393,7 +378,7 @@
 .birthLocationInputContainer {
   margin: 20px 0px 0px 0px;
   justify-items: left;
-  width: 385px;
+  width: 425px;
 }
 
 .birthLocationTitle {
