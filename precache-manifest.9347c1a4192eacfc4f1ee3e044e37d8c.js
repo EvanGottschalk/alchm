@@ -52,12 +52,12 @@ self.__precacheManifest = [
     "url": "/static/media/background1.d3daee6d.png"
   },
   {
-    "revision": "f76c4727deacf18f224338dcd2f6b799",
-    "url": "/static/media/Sequel100Black-45.f76c4727.ttf"
-  },
-  {
     "revision": "46e04813fd076dee1d665480f5f6ec08",
     "url": "/static/media/Sequel100Black-65.46e04813.ttf"
+  },
+  {
+    "revision": "f76c4727deacf18f224338dcd2f6b799",
+    "url": "/static/media/Sequel100Black-45.f76c4727.ttf"
   },
   {
     "revision": "ac7c673e860f1924eda4577fab0440b0",
