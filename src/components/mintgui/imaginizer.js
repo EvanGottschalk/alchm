@@ -3,7 +3,7 @@
 
 import {callAPI} from './call-api.js';
 
-export default { imaginize, generateDALLEprompt, generateImageFromPrompt }
+export default { imaginize, generateDALLEprompt, generateMidjourneyPrompt, generateImageFromPrompt }
 
 
 
@@ -273,7 +273,7 @@ export async function generateDALLEprompt(birth_info, horoscope_dict, alchm_info
 };
 
 
-async function generateMidjourneyPrompt(birth_info, horoscope_dict, alchm_info) {
+export async function generateMidjourneyPrompt(birth_info, horoscope_dict, alchm_info) {
     const sun_sign = alchm_info['Sun Sign'];
     const dominant_element = alchm_info['Dominant Element'];
     const gender = birth_info['Gender'];

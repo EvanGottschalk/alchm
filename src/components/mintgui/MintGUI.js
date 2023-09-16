@@ -18,6 +18,7 @@ import locationCSV from "./allLocationsUSfirst.csv";
 ////////////////////////////////////////
 //TEST - for testing purposes
 var test_mode = false;
+var test_generator = 'DALL-E';
 var test_button_display = 'none';
 if (window.location.href.includes('test')) {
   test_mode = true;
@@ -573,7 +574,13 @@ async function handleSubmitClick (event) {
   const astrology_info = astrologize(birth_info);
   const alchemy_info = alchemizer.alchemize(birth_info, astrology_info);
 
-  const imaginizer_prompt_info = await imaginizer.generateDALLEprompt(birth_info, astrology_info, alchemy_info);
+  var imaginizer_prompt_info;
+
+  if (test_generator === 'DALL-E') {
+    imaginizer_prompt_info = await imaginizer.generateDALLEprompt(birth_info, astrology_info, alchemy_info);
+  } else if (test_generator === 'Midjourney') {
+    imaginizer_prompt_info = await imaginizer.generateMidjourneyPrompt(birth_info, astrology_info, alchemy_info);
+  };
   //avatar_URL = midjournizer.midjournize(alchemy);
   console.log("Alchm Output: ", alchemy_info);
   document.getElementById("alchmInfo").innerHTML = convertDictToString(alchemy_info);
@@ -1075,6 +1082,10 @@ async function handleGenderSelect(event) {
   console.log('gender click');
 }
 
+async function handleGeneratorChange(event) {
+  test_generator = event.target.value;
+}
+
 const populousLocationsByTimeZone = {'-1100': {'Abbreviation': 'SST',
                                                'Country': 'Pago Pago',
                                                'State': '',
@@ -1412,6 +1423,57 @@ return (
             rel="noreferrer">
             {(isMinted) ? 'View on OpenSea ->' : ''}
           </a>
+          <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+            <input type="hidden" name="cmd" value="_s-xclick" />
+            <input type="hidden" name="hosted_button_id" value="JA9M8AQ5375ZA" />
+            <table>
+              <tr>
+                <td>
+                  <input type="hidden" name="on0" value="When were you born?"/>
+                  When were you born?
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <select name="os0">
+                    <option value="Morning">
+                      Morning
+                    </option>
+                    <option value="Day">
+                      Day
+                    </option>
+                    <option value="Night">
+                      Night
+                    </option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input type="hidden" name="on1" value="Birth Date (DD/MM/YYYY):"/>
+                  Birth Date (DD/MM/YYYY):
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input type="text" name="os1" maxLength="200" />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input type="hidden" name="on2" value="Birth Place (State, City):"/>
+                  Birth Place (State, City):
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input type="text" name="os2" maxLength="200" />
+                </td>
+              </tr>
+            </table>
+            <input type="hidden" name="currency_code" value="USD" />
+            <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Buy Now" />
+          </form>
         </div>
       </div>
     </div>
@@ -1430,6 +1492,10 @@ return (
       <div id='locationUsed' style={{fontSize:15}}>Location Used: </div>
       <div>____________________________________________________________________</div>
       <div style={{fontSize:30}}>Imaginizer Output</div>
+      <select className='imageGeneratorSelect' id='imageGeneratorSelect' onChange={handleGeneratorChange}>
+        <option value="DALL-E">DALL-E</option>
+        <option value="Midjourney">Midjourney</option>
+      </select>
       <div id='promptSentence' style={{fontSize:15}}>Prompt Sentence: </div>
       <br></br>
       <div id='promptDict' style={{fontSize:15}}>Prompt Dict: </div>
