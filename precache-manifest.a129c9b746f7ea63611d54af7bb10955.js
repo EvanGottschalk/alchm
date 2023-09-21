@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "bea28f890f0fdbd49f22",
+    "revision": "c5d4316747197693d687",
     "url": "/static/css/main.c9021249.chunk.css"
   },
   {
-    "revision": "bea28f890f0fdbd49f22",
-    "url": "/static/js/main.bea28f89.chunk.js"
+    "revision": "c5d4316747197693d687",
+    "url": "/static/js/main.c5d43167.chunk.js"
   },
   {
     "revision": "6b98408e4e273377a011",
@@ -52,12 +52,12 @@ self.__precacheManifest = [
     "url": "/static/media/background1.d3daee6d.png"
   },
   {
-    "revision": "46e04813fd076dee1d665480f5f6ec08",
-    "url": "/static/media/Sequel100Black-65.46e04813.ttf"
-  },
-  {
     "revision": "f76c4727deacf18f224338dcd2f6b799",
     "url": "/static/media/Sequel100Black-45.f76c4727.ttf"
+  },
+  {
+    "revision": "46e04813fd076dee1d665480f5f6ec08",
+    "url": "/static/media/Sequel100Black-65.46e04813.ttf"
   },
   {
     "revision": "ac7c673e860f1924eda4577fab0440b0",
@@ -100,7 +100,7 @@ self.__precacheManifest = [
     "url": "/static/media/OpenSea.2e593fb8.svg"
   },
   {
-    "revision": "0b026e766078b0ea515eafd65d3d267a",
+    "revision": "2b76ae7629aa321777881f0a98953ceb",
     "url": "/index.html"
   }
 ];
